@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { supabaseBypass } from "@/lib/supabase"
+import { supabase } from "@/lib/supabase"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Check, X, AlertTriangle } from "lucide-react"
@@ -42,7 +42,7 @@ export default function AdminComments({ onApprove }: AdminCommentsProps) {
       console.log("Fetching comments for tab:", activeTab, "aprovado:", aprovado)
 
       // Fetch comments with join to get noticia title
-      const { data: comments, error } = await supabaseBypass
+      const { data: comments, error } = await supabase
         .from("comentarios")
         .select(`
           *,
@@ -80,7 +80,7 @@ export default function AdminComments({ onApprove }: AdminCommentsProps) {
   }
 
   const handleApprove = async (id: string) => {
-    const { error } = await supabaseBypass.from("comentarios").update({ aprovado: true }).eq("id", id)
+    const { error } = await supabase.from("comentarios").update({ aprovado: true }).eq("id", id)
 
     if (!error) {
       setPendingComments(pendingComments.filter((comment) => comment.id !== id))
@@ -94,7 +94,7 @@ export default function AdminComments({ onApprove }: AdminCommentsProps) {
   const handleDelete = async (id: string) => {
     if (!confirm("Tem certeza que deseja excluir este comentário?")) return
 
-    const { error } = await supabaseBypass.from("comentarios").delete().eq("id", id)
+    const { error } = await supabase.from("comentarios").delete().eq("id", id)
 
     if (!error) {
       setPendingComments(pendingComments.filter((comment) => comment.id !== id))

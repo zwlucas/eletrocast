@@ -2,10 +2,8 @@ import { createClient } from "@supabase/supabase-js"
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-const SUPABASE_ANON_KEY_SECRET = process.env.SUPABASE_ANON_KEY_SECRET!
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
-export const supabaseBypass = createClient(supabaseUrl, SUPABASE_ANON_KEY_SECRET)
 
 export type Noticia = {
   id: string

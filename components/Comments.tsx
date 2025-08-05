@@ -35,7 +35,7 @@ export default function Comments({ noticiaId }: CommentsProps) {
         .from("comentarios")
         .select("id, nome, comentario, created_at")
         .eq("noticia_id", noticiaId)
-        .eq("aprovado", true)
+        // .eq("aprovado", true)
         .order("created_at", { ascending: false })
 
       if (!error && data) {
@@ -72,7 +72,8 @@ export default function Comments({ noticiaId }: CommentsProps) {
       if (error) {
         alert("Erro ao enviar comentário: " + error.message)
       } else {
-        alert("Comentário enviado! Será publicado após aprovação.")
+        //alert("Comentário enviado! Será publicado após aprovação.")
+        alert("Comentário enviado!")
         setFormData({ nome: "", email: "", comentario: "" })
       }
     } catch (error) {
