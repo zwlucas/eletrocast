@@ -66,7 +66,7 @@ export default function SobrePage() {
                 href="mailto:contato@eletrocast.com"
                 className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
               >
-                contato@eletrocast.com
+                contato@eletrocast.tech 
               </a>
             </div>
           </div>
@@ -79,7 +79,7 @@ export default function SobrePage() {
 
             <div className="flex gap-4">
               <a
-                href="https://youtube.com/@eletrocast"
+                href="https://youtube.com/@eletrocast2024"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 text-red-600 hover:text-red-700 transition-colors"
