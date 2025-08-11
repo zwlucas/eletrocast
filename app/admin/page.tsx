@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/badge"
 import { BarChart3, MessageSquare, FileText } from "lucide-react"
 import AdminComments from "@/components/AdminComments"
 import AdminAnalytics from "@/components/AdminAnalytics"
+import YouTubeCacheStats from "@/components/YouTubeCacheStats"
 
 const noticiaSchema = z.object({
   titulo: z.string().min(1, "Título é obrigatório").max(200, "Título muito longo"),
@@ -421,8 +422,12 @@ export default function AdminPage() {
           </div>
         </TabsContent>
 
-        <TabsContent value="comentarios">
+        {/* <TabsContent value="comentarios">
           <AdminComments onApprove={fetchPendingCommentsCount} />
+        </TabsContent> */}
+
+        <TabsContent value="Youtube Cache">
+          <YouTubeCacheStats />
         </TabsContent>
 
         <TabsContent value="analytics">

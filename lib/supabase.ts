@@ -17,3 +17,5 @@ export type Noticia = {
   created_by?: string
   updated_by?: string
 }
+
+export { createClient }
