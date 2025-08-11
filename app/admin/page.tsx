@@ -258,13 +258,18 @@ export default function AdminPage() {
             <FileText className="h-4 w-4" />
             <span>Notícias</span>
           </TabsTrigger>
-          <TabsTrigger value="comentarios" className="flex items-center gap-2">
+          {/* <TabsTrigger value="comentarios" className="flex items-center gap-2">
             <MessageSquare className="h-4 w-4" />
             <span>Comentários</span>
             {pendingCommentsCount > 0 && (
               <Badge variant="destructive" className="ml-1">
                 {pendingCommentsCount}
               </Badge>
+            )}
+          </TabsTrigger> */}
+          <TabsTrigger value="youtube" className="flex items-center gap-2">
+            <MessageSquare className="h-4 w-4" />
+            <span>Youtube Cache</span>
             )}
           </TabsTrigger>
           <TabsTrigger value="analytics" className="flex items-center gap-2">
@@ -426,7 +431,7 @@ export default function AdminPage() {
           <AdminComments onApprove={fetchPendingCommentsCount} />
         </TabsContent> */}
 
-        <TabsContent value="Youtube Cache">
+        <TabsContent value="youtube">
           <YouTubeCacheStats />
         </TabsContent>
 
