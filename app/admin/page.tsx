@@ -270,7 +270,6 @@ export default function AdminPage() {
           <TabsTrigger value="youtube" className="flex items-center gap-2">
             <MessageSquare className="h-4 w-4" />
             <span>Youtube Cache</span>
-            )}
           </TabsTrigger>
           <TabsTrigger value="analytics" className="flex items-center gap-2">
             <BarChart3 className="h-4 w-4" />
