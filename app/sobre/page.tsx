@@ -87,7 +87,7 @@ export default function SobrePage() {
                 <Youtube className="h-5 w-5" />
                 YouTube
               </a>
-              <a
+              {/* <a
                 href="https://twitter.com/eletrocast"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -104,7 +104,7 @@ export default function SobrePage() {
               >
                 <Instagram className="h-5 w-5" />
                 Instagram
-              </a>
+              </a> */}
             </div>
           </div>
         </div>

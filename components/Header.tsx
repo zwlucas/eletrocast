@@ -56,12 +56,6 @@ export default function Header() {
             >
               Sobre
             </Link>
-            <Link
-              href="/admin"
-              className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-            >
-              Admin
-            </Link>
           </nav>
 
           <div className="flex items-center gap-2">
