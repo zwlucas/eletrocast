@@ -36,7 +36,8 @@ export default function Newsletter() {
       setEmail("")
       setNome("")
     } catch (err: any) {
-      setError(err.message)
+      console.error("Erro na inscrição:", err)
+      setError(err.message || "Erro inesperado. Tente novamente.")
     } finally {
       setLoading(false)
     }
@@ -55,6 +56,16 @@ export default function Newsletter() {
         </h3>
         <p className="text-green-600 dark:text-green-400 mb-2">Você receberá nossas novidades em primeira mão.</p>
         <p className="text-sm text-green-500 dark:text-green-400">📧 Verifique seu email para confirmar a inscrição!</p>
+        <button
+          onClick={() => {
+            setSuccess(false)
+            setEmail("")
+            setNome("")
+          }}
+          className="mt-4 text-sm text-green-600 dark:text-green-400 hover:underline"
+        >
+          Fazer nova inscrição
+        </button>
       </motion.div>
     )
   }
@@ -74,7 +85,7 @@ export default function Newsletter() {
           animate={{ opacity: 1, y: 0 }}
           className="bg-red-500/20 border border-red-400 rounded-md p-3 mb-4 flex items-center gap-2"
         >
-          <AlertCircle className="h-4 w-4 text-red-300" />
+          <AlertCircle className="h-4 w-4 text-red-300 flex-shrink-0" />
           <span className="text-red-100 text-sm">{error}</span>
         </motion.div>
       )}
@@ -85,9 +96,10 @@ export default function Newsletter() {
           placeholder="Seu nome"
           value={nome}
           onChange={(e) => setNome(e.target.value)}
-          className="w-full px-4 py-2 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+          className="w-full px-4 py-2 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-yellow-400 disabled:opacity-50"
           required
           disabled={loading}
+          minLength={2}
         />
 
         <input
@@ -95,14 +107,14 @@ export default function Newsletter() {
           placeholder="Seu melhor e-mail"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full px-4 py-2 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+          className="w-full px-4 py-2 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-yellow-400 disabled:opacity-50"
           required
           disabled={loading}
         />
 
         <button
           type="submit"
-          disabled={loading}
+          disabled={loading || !email || !nome}
           className="w-full bg-yellow-400 hover:bg-yellow-500 text-yellow-900 font-semibold py-2 px-4 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {loading ? (

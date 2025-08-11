@@ -9,13 +9,49 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Email é obrigatório" }, { status: 400 })
     }
 
-    const { error } = await supabase.from("newsletter_subscribers").update({ is_active: false }).eq("email", email)
+    // Desativar a inscrição
+    const { error } = await supabase
+      .from("newsletter_subscribers")
+      .update({ is_active: false, unsubscribed_at: new Date().toISOString() })
+      .eq("email", email)
 
     if (error) {
       throw error
     }
 
-    return NextResponse.json({ success: true })
+    return NextResponse.json({
+      success: true,
+      message: "Inscrição cancelada com sucesso!",
+    })
+  } catch (error) {
+    console.error("Erro ao cancelar inscrição:", error)
+    return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 })
+  }
+}
+
+export async function GET(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url)
+    const email = searchParams.get("email")
+
+    if (!email) {
+      return NextResponse.json({ error: "Email é obrigatório" }, { status: 400 })
+    }
+
+    // Desativar a inscrição
+    const { error } = await supabase
+      .from("newsletter_subscribers")
+      .update({ is_active: false, unsubscribed_at: new Date().toISOString() })
+      .eq("email", email)
+
+    if (error) {
+      throw error
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: "Inscrição cancelada com sucesso!",
+    })
   } catch (error) {
     console.error("Erro ao cancelar inscrição:", error)
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 })

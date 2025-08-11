@@ -35,22 +35,24 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         success: true,
         message: "Nenhum subscriber ativo encontrado",
+        sent: 0,
       })
     }
 
     // Enviar emails para todos os subscribers
     const emailPromises = subscribers.map((subscriber: any) =>
-      sendNewsletterNotification({
-        noticia,
-        subscriber,
+      sendNewsletterNotification({ noticia, subscriber }).catch((error) => {
+        console.error(`Erro ao enviar email para ${subscriber.email}:`, error)
+        return null
       }),
     )
 
-    await Promise.allSettled(emailPromises)
+    await Promise.all(emailPromises)
 
     return NextResponse.json({
       success: true,
       message: `Notificações enviadas para ${subscribers.length} subscribers`,
+      sent: subscribers.length,
     })
   } catch (error) {
     console.error("Erro ao enviar notificações:", error)

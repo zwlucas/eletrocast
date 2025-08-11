@@ -1,102 +1,95 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useSearchParams } from "next/navigation"
-import { Mail, CheckCircle, XCircle } from "lucide-react"
+import { CheckCircle, XCircle, Mail, ArrowLeft } from "lucide-react"
+import Link from "next/link"
 
 export default function UnsubscribePage() {
-  const [loading, setLoading] = useState(false)
-  const [success, setSuccess] = useState(false)
-  const [error, setError] = useState("")
+  const [status, setStatus] = useState<"loading" | "success" | "error">("loading")
+  const [message, setMessage] = useState("")
   const searchParams = useSearchParams()
   const email = searchParams.get("email")
 
-  const handleUnsubscribe = async () => {
+  useEffect(() => {
     if (!email) {
-      setError("Email não fornecido")
+      setStatus("error")
+      setMessage("Email não fornecido")
       return
     }
 
-    setLoading(true)
-    try {
-      const response = await fetch("/api/newsletter/unsubscribe", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      })
+    const unsubscribe = async () => {
+      try {
+        const response = await fetch(`/api/newsletter/unsubscribe?email=${encodeURIComponent(email)}`)
+        const data = await response.json()
 
-      if (response.ok) {
-        setSuccess(true)
-      } else {
-        throw new Error("Erro ao cancelar inscrição")
+        if (response.ok) {
+          setStatus("success")
+          setMessage(data.message)
+        } else {
+          setStatus("error")
+          setMessage(data.error || "Erro ao cancelar inscrição")
+        }
+      } catch (error) {
+        setStatus("error")
+        setMessage("Erro de conexão")
       }
-    } catch (err: any) {
-      setError(err.message)
-    } finally {
-      setLoading(false)
     }
-  }
 
-  if (success) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
-        <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 text-center">
-          <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Inscrição Cancelada</h1>
-          <p className="text-gray-600 dark:text-gray-300 mb-6">
-            Sua inscrição foi cancelada com sucesso. Você não receberá mais emails do Eletrocast.
-          </p>
-          <a
-            href="/"
-            className="inline-block bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors"
-          >
-            Voltar ao Site
-          </a>
-        </div>
-      </div>
-    )
-  }
+    unsubscribe()
+  }, [email])
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
-      <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
-        <div className="text-center mb-6">
-          <Mail className="h-16 w-16 text-blue-500 mx-auto mb-4" />
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Cancelar Inscrição</h1>
-          <p className="text-gray-600 dark:text-gray-300">
-            Tem certeza que deseja cancelar sua inscrição no newsletter?
-          </p>
-        </div>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-4">
+      <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 text-center">
+        {status === "loading" && (
+          <>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <h1 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Processando...</h1>
+            <p className="text-gray-600 dark:text-gray-400">Cancelando sua inscrição no newsletter</p>
+          </>
+        )}
 
-        {email && (
-          <div className="bg-gray-50 dark:bg-gray-700 rounded-md p-3 mb-6">
-            <p className="text-sm text-gray-600 dark:text-gray-300">
-              <strong>Email:</strong> {email}
+        {status === "success" && (
+          <>
+            <CheckCircle className="h-12 w-12 text-green-600 mx-auto mb-4" />
+            <h1 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Inscrição Cancelada</h1>
+            <p className="text-gray-600 dark:text-gray-400 mb-6">{message}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+              Você não receberá mais emails do nosso newsletter.
             </p>
-          </div>
+          </>
         )}
 
-        {error && (
-          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md p-3 mb-4 flex items-center gap-2">
-            <XCircle className="h-4 w-4 text-red-500" />
-            <span className="text-red-700 dark:text-red-300 text-sm">{error}</span>
-          </div>
+        {status === "error" && (
+          <>
+            <XCircle className="h-12 w-12 text-red-600 mx-auto mb-4" />
+            <h1 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Erro</h1>
+            <p className="text-gray-600 dark:text-gray-400 mb-6">{message}</p>
+          </>
         )}
 
-        <div className="flex gap-3">
-          <button
-            onClick={handleUnsubscribe}
-            disabled={loading || !email}
-            className="flex-1 bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
-            {loading ? "Cancelando..." : "Sim, Cancelar"}
-          </button>
-          <a
+        <div className="space-y-3">
+          <Link
             href="/"
-            className="flex-1 bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-200 py-2 px-4 rounded-md hover:bg-gray-400 dark:hover:bg-gray-500 transition-colors text-center"
+            className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md transition-colors"
           >
-            Voltar
-          </a>
+            <ArrowLeft className="h-4 w-4" />
+            Voltar ao Site
+          </Link>
+
+          {status === "success" && (
+            <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">Mudou de ideia?</p>
+              <Link
+                href="/"
+                className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 text-sm"
+              >
+                <Mail className="h-4 w-4" />
+                Inscrever-se novamente
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </div>
