@@ -10,7 +10,7 @@ export async function sendWelcomeEmail({ email, nome }: { email: string; nome: s
 
   try {
     const { data, error } = await resend.emails.send({
-      from: "Eletrocast <newsletter@eletrocast.tech>",
+      from: "Eletrocast <newsletter@newsletter.eletrocast.tech>",
       to: [email],
       subject: "🎉 Bem-vindo ao Eletrocast!",
       html: `
@@ -78,7 +78,7 @@ export async function sendNewsletterNotification({
 
   try {
     const { data, error } = await resend.emails.send({
-      from: "Eletrocast <newsletter@eletrocast.tech>",
+      from: "Eletrocast <newsletter@newsletter.eletrocast.tech>",
       to: [subscriber.email],
       subject: `📰 Nova notícia: ${noticia.titulo}`,
       html: `
