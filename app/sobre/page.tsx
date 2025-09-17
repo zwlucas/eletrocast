@@ -13,7 +13,7 @@ export default function SobrePage() {
 
         <div className="prose prose-lg max-w-none text-gray-700 dark:text-gray-300">
           <p className="mb-4">
-            O <strong>Eletrocast</strong> surgiu de uma ideia de dus amigas em 2023, e que por um impulso fizemos
+            O <strong>Eletrocast</strong> surgiu de uma ideia de duas amigas em 2023, e que por um impulso fizemos
             surgir um dos maiores projetos da Eletrô. Mas nem sempre foi como vocês veem, no começo a gambiarra rolava
             solta no nosso estúdio e mesmo assim fizemos algo que muitos adoraram, as pessoas adoraram e recebemos a
             ajuda da Eletrô para comprar os equipamentos.
