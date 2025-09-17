@@ -26,7 +26,7 @@ export default function SobrePage() {
           </p>
 
           <p>
-            2025 conquistamos nosso próprio estúdio e o projeto desse ano será o melhor dentre esses anos!
+            Em 2025 conquistamos nosso próprio estúdio e o projeto desse ano será o melhor dentre esses anos!
           </p>
         </div>
       </div>
