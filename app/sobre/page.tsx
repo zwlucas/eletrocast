@@ -13,19 +13,20 @@ export default function SobrePage() {
 
         <div className="prose prose-lg max-w-none text-gray-700 dark:text-gray-300">
           <p className="mb-4">
-            O <strong>Eletrocast</strong> nasceu da paixão por tecnologia e da vontade de compartilhar conhecimento de
-            forma acessível e descontraída. Nosso objetivo é trazer as últimas novidades do mundo tech, discutir
-            tendências e ajudar nossa comunidade a se manter atualizada.
+            O <strong>Eletrocast</strong> surgiu de uma ideia de dus amigas em 2023, e que por um impulso fizemos
+            surgir um dos maiores projetos da Eletrô. Mas nem sempre foi como vocês veem, no começo a gambiarra rolava
+            solta no nosso estúdio e mesmo assim fizemos algo que muitos adoraram, as pessoas adoraram e recebemos a
+            ajuda da Eletrô para comprar os equipamentos.
           </p>
 
           <p className="mb-4">
-            Através de nossos podcasts, lives e conteúdos, exploramos temas como desenvolvimento web, inteligência
-            artificial, startups, carreira em tecnologia e muito mais. Sempre com uma abordagem prática e didática.
+            Em 2024 nosso sonho deu um grande passo: microfones de qualidade, uma mesa de som boa e grande determinação
+            para fazer o projeto desse ano dar certo e no final deu! Nossos esforços tiveram mais reconhecimento e ganhamos
+            mais forças.
           </p>
 
           <p>
-            Acreditamos que o conhecimento deve ser compartilhado e que juntos podemos construir uma comunidade mais
-            forte e conectada no universo da tecnologia.
+            2025 conquistamos nosso próprio estúdio e o projeto desse ano será o melhor dentre esses anos!
           </p>
         </div>
       </div>
@@ -34,8 +35,8 @@ export default function SobrePage() {
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
           <h3 className="text-xl font-semibold text-blue-900 dark:text-blue-100 mb-4">Nossa Missão</h3>
           <p className="text-gray-700 dark:text-gray-300">
-            Democratizar o acesso ao conhecimento tecnológico através de conteúdo de qualidade, criando uma ponte entre
-            iniciantes e profissionais experientes.
+            Fazer as pessoas reconhecerem a escola e saberem que sua criatividade pode fluir como a nossa fluiu e
+            não é só isso, compartilhar experiências de estudantes do 3° ano e algumas boas curiosidades sobre os cursos.
           </p>
         </div>
 

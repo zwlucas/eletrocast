@@ -149,10 +149,10 @@ scripts/03-add-tags-and-audit.sql
 
 # 4. Adicionar comentários e analytics
 scripts/04-analytics-and-comments.sql
-\`\`\`
+```
 
 ### 5. Execute o projeto
-\`\`\`bash
+```bash
 npm run dev
 ```
 
