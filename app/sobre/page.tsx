@@ -6,7 +6,7 @@ export default function SobrePage() {
       id: 1,
       name: "Ana Marcela",
       role: "Fundadora & Apresentadora",
-      image: "/.jpg",
+      image: "https://instagram.fpoo2-1.fna.fbcdn.net/v/t51.2885-19/433301424_968495264712448_8293533060514165419_n.jpg?stp=dst-jpg_s150x150_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLmRqYW5nby43NjUuYzIifQ&_nc_ht=instagram.fpoo2-1.fna.fbcdn.net&_nc_cat=104&_nc_oc=Q6cZ2QGzYuQl_7-pEx7rv2z6hGxbOVyVkj_4SBaVEMxf-JkqNua4tGWVpA7QlfI5AjWdqos&_nc_ohc=h8NosiJcApkQ7kNvwGpclul&_nc_gid=X9dEEkcl31UEaQVO198DSQ&edm=AONqaaQBAAAA&ccb=7-5&oh=00_Afa73LqmUXpHHimvPa0NfNNCDvF_7tK0m28E2siezZA8uA&oe=68D0746A&_nc_sid=4e3341",
       personalText:
         "Apaixonado por tecnologia desde os 12 anos, criei o Eletrocast para compartilhar conhecimento e conectar pessoas. Acredito que a tecnologia pode transformar vidas!",
       email: "anamarcela@eletrocast.tech",
@@ -16,7 +16,7 @@ export default function SobrePage() {
       id: 2,
       name: "Carol",
       role: "Co-Fundadora & Apresentadora",
-      image: "/professional-woman-tech-expert-smiling.jpg",
+      image: "https://instagram.fpoo2-1.fna.fbcdn.net/v/t51.2885-19/523554974_18061322432350836_3172836380021265341_n.jpg?stp=dst-jpg_s150x150_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLmRqYW5nby4xMDgwLmMyIn0&_nc_ht=instagram.fpoo2-1.fna.fbcdn.net&_nc_cat=100&_nc_oc=Q6cZ2QEz7t9FylOQzvOgICaAeZNF056X3Y3MJavX8jHBwlUOOwfL2BPESEm4SSy-tEnKPDs&_nc_ohc=bnbpVOVbmh4Q7kNvwGLmdRC&_nc_gid=DtT5h4HDOLD9Zc0Ce87bZQ&edm=ACE-g0gBAAAA&ccb=7-5&oh=00_AfagmALlp4b4iygPpuWKXGZjcApboyELX9_4JC2fuR9TEQ&oe=68D076E3&_nc_sid=b15361",
       personalText:
         "Doutora em Ciência da Computação, dedico minha vida a tornar a IA mais acessível. No Eletrocast, traduzo conceitos complexos em linguagem simples.",
       email: "carol@eletrocast.tech",
@@ -26,7 +26,7 @@ export default function SobrePage() {
       id: 3,
       name: "Lucas Faria",
       role: "Operador de Som & Desenvolvedor",
-      image: "/.jpg",
+      image: "https://instagram.fpoo2-1.fna.fbcdn.net/v/t51.2885-19/538463487_18322479460226810_1777326981917733151_n.jpg?stp=dst-jpg_s150x150_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLmRqYW5nby4xMDgwLmMyIn0&_nc_ht=instagram.fpoo2-1.fna.fbcdn.net&_nc_cat=102&_nc_oc=Q6cZ2QGD_1ZFUVKaW8GQ1KdBqkmG2ekrWzZ-tJNXzYb9GniQ8f7QHvIXNyWUhYVscOfxch4&_nc_ohc=aLSKo9904_kQ7kNvwHpAWXs&_nc_gid=Z_Haysut_cOftafz6LIFiw&edm=AP4sbd4BAAAA&ccb=7-5&oh=00_AfZz_E7nP0jB_TmU8P9AMqsOZDAYLcdGc_E6aBQKslaZNQ&oe=68D0771D&_nc_sid=7a9f4b",
       personalText:
         "Transformo ideias em experiências visuais incríveis. Cada episódio é uma nova oportunidade de criar algo único e envolvente para nossa comunidade.",
       email: "lucas@eletrocast.tech",
@@ -36,7 +36,7 @@ export default function SobrePage() {
       id: 4,
       name: "Yves",
       role: "Produtor de Vídeo",
-      image: "/professional-woman-content-creator-laptop.jpg",
+      image: "https://instagram.fpoo2-1.fna.fbcdn.net/v/t51.2885-19/476886861_949736070614982_6658791873360174972_n.jpg?stp=dst-jpg_s150x150_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLmRqYW5nby44NjQuYzIifQ&_nc_ht=instagram.fpoo2-1.fna.fbcdn.net&_nc_cat=106&_nc_oc=Q6cZ2QHY4Tm1LAU2jjuqnaRbr-Z8PUb2GugzhQfetDJACC7bddzvYaUSfS7iKgvylTH-Xe0&_nc_ohc=cMau88O10UEQ7kNvwFTsj1S&_nc_gid=78W0DzGR3GPRcI_WGoftOA&edm=AP4sbd4BAAAA&ccb=7-5&oh=00_Afb0H_viyTnpn90PbW6YfSEe6YnXMTHG6a9xLXa9c2_s8Q&oe=68D08828&_nc_sid=7a9f4b",
       personalText:
         "Sou a ponte entre as ideias e o público. Pesquiso, organizo e estruturo cada episódio para entregar o melhor conteúdo possível.",
       email: "yves@eletrocast.tech",
@@ -46,7 +46,7 @@ export default function SobrePage() {
       id: 5,
       name: "Arnaldo",
       role: "Designer",
-      image: "/developer-man-coding-programming.jpg",
+      image: "https://instagram.fpoo2-1.fna.fbcdn.net/v/t51.2885-19/461708560_979942603933227_2358509484830806342_n.jpg?stp=dst-jpg_s150x150_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLmRqYW5nby4xMDgwLmMyIn0&_nc_ht=instagram.fpoo2-1.fna.fbcdn.net&_nc_cat=103&_nc_oc=Q6cZ2QFMCegmBOg0O3LfMwqwmk8OQr55nJlI7xVRgsutrs2-E8xX394deEUXicERTxqbgD4&_nc_ohc=cc_XNcC0k_8Q7kNvwHFKTsV&_nc_gid=GtSLqUJetdkHb3JQhQnXyQ&edm=AP4sbd4BAAAA&ccb=7-5&oh=00_AfacZ_qk5GdCo7wGDqKL5wUbnOeBkNsp2smOXbI_vHZ34Q&oe=68D05D7C&_nc_sid=7a9f4b",
       personalText:
         "Código é poesia em movimento. Desenvolvo as soluções técnicas que mantêm o Eletrocast funcionando e sempre buscando inovações.",
       email: "arnaldo@eletrocast.tech",
@@ -56,7 +56,7 @@ export default function SobrePage() {
       id: 6,
       name: "Pietro",
       role: "Auxiliar de som e vídeo",
-      image: "/social-media-manager-woman-smartphone.jpg",
+      image: "https://scontent-for2-2.cdninstagram.com/v/t51.2885-19/44884218_345707102882519_2446069589734326272_n.jpg?efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLmRqYW5nby4xNTAuYzIifQ&_nc_ht=scontent-for2-2.cdninstagram.com&_nc_cat=1&_nc_oc=Q6cZ2QFTdvoLni7ZjtwmPi-Ryjd5zbB8oMLSZee_HuArpruomO-DhtsQMRziRPnxVDhO-nw&_nc_ohc=AH7vFm8qSmMQ7kNvwE-xfCE&edm=AAAAAAABAAAA&ccb=7-5&ig_cache_key=YW5vbnltb3VzX3Byb2ZpbGVfcGlj.3-ccb7-5&oh=00_AfaW8TwcjYstMR-k4M6hDaCaxichPjPXL4pAcg72uqYnaw&oe=68D078CF&_nc_sid=328259",
       personalText:
         "Nossa comunidade é minha paixão! Cuido de cada interação, resposta e conexão. Vocês são o coração do Eletrocast!",
       email: "pietro@eletrocast.tech",
@@ -66,7 +66,7 @@ export default function SobrePage() {
       id: 7,
       name: "Miguel",
       role: "Auxiliar de som e vídeo",
-      image: "/533006893_18062474882350457_1105685139142315192_n.jpg",
+      image: "https://instagram.fpoo2-1.fna.fbcdn.net/v/t51.2885-19/533006893_18062474882350457_1105685139142315192_n.jpg?stp=dst-jpg_s150x150_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLmRqYW5nby4xMDgwLmMyIn0&_nc_ht=instagram.fpoo2-1.fna.fbcdn.net&_nc_cat=105&_nc_oc=Q6cZ2QFAbIb3BNm4_Fy4SrJU3HytVpsQfH8APZ46XLAy-nnv3fpkUInGZqNvRlq7PdGCy54&_nc_ohc=KBKMI-Yp3skQ7kNvwHty1EI&_nc_gid=s1xNKc1j-ZUdxc1xTsDP0w&edm=ALGbJPMBAAAA&ccb=7-5&oh=00_AfbZGDepPxLgKVZzW-ZPXWI54n6LLPmaQ4rxgv1DUqdvaw&oe=68D05D98&_nc_sid=7d3ac5",
       personalText:
         "O som perfeito é minha obsessão. Cada palavra, cada música, cada efeito é cuidadosamente ajustado para proporcionar a melhor experiência auditiva.",
       email: "miguel@eletrocast.tech",
@@ -122,6 +122,11 @@ export default function SobrePage() {
                   src={member.image || "/placeholder.svg"}
                   alt={member.name}
                   className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110"
+                  onError={(e) => {
+                    // Fallback para placeholder se a imagem do Instagram não carregar
+                    e.currentTarget.src =
+                      "/placeholder.svg?height=256&width=256&text=" + encodeURIComponent(member.name)
+                  }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </div>
