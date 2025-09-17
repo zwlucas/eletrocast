@@ -66,7 +66,7 @@ export default function SobrePage() {
       id: 7,
       name: "Miguel",
       role: "Auxiliar de som e vídeo",
-      image: "/audio-engineer-man-mixing-console.jpg",
+      image: "/533006893_18062474882350457_1105685139142315192_n.jpg",
       personalText:
         "O som perfeito é minha obsessão. Cada palavra, cada música, cada efeito é cuidadosamente ajustado para proporcionar a melhor experiência auditiva.",
       email: "miguel@eletrocast.tech",
