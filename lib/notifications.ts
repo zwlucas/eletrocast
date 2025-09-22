@@ -93,9 +93,9 @@ export async function sendNewsletterNotification({
             <h2 style="color: #1D4ED8; margin-bottom: 20px; line-height: 1.3;">${noticia.titulo}</h2>
             
             ${
-              noticia.imagem_opcional
+              noticia.imagem_url
                 ? `
-              <img src="${noticia.imagem_opcional}" 
+              <img src="${noticia.imagem_url}" 
                    alt="${noticia.titulo}" 
                    style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 20px;" />
             `
@@ -150,23 +150,13 @@ export async function sendNewPostNotification(noticia: {
 }) {
   // Trigger newsletter notification for all subscribers
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/newsletter/notify`, {
+    await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/newsletter/notify`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ noticiaId: noticia.id }),
     })
-
-    const result = await response.json()
-
-    if (!response.ok) {
-      throw new Error(result.error || "Erro ao enviar notificações")
-    }
-
-    console.log(`✅ Notificações enviadas com sucesso: ${result.sent} emails enviados`)
-    return result
   } catch (error) {
-    console.error("❌ Erro ao enviar notificações:", error)
-    throw error
+    console.error("Error triggering newsletter notifications:", error)
   }
 }
 
