@@ -16,7 +16,6 @@ O Eletrocast é uma aplicação web full-stack construída com Next.js 14, que o
 - **PWA**: Aplicativo instalável para dispositivos móveis
 - **Dark Mode**: Tema escuro/claro com detecção automática
 - **Notificações**: E-mail e Discord webhooks para engajamento
-- **Analytics**: Rastreamento de eventos e métricas de uso
 
 ## 🚀 Funcionalidades Principais
 
@@ -56,7 +55,6 @@ O Eletrocast é uma aplicação web full-stack construída com Next.js 14, que o
 - ✅ Newsletter integrada
 - ✅ Notificações por e-mail (Resend)
 - ✅ Webhooks Discord
-- ✅ Analytics personalizado
 - ✅ Cache inteligente com ISR
 
 ## 🛠️ Stack Tecnológica
@@ -147,8 +145,8 @@ scripts/02-seed-data.sql
 # 3. Adicionar tags e auditoria
 scripts/03-add-tags-and-audit.sql
 
-# 4. Adicionar comentários e analytics
-scripts/04-analytics-and-comments.sql
+# 4. Adicionar comentários
+scripts/04-comments.sql
 ```
 
 ### 5. Execute o projeto
@@ -195,7 +193,6 @@ eletrocast/
 ├── lib/                  # Utilitários e configurações
 │   ├── supabase.ts       # Cliente Supabase
 │   ├── youtube.ts        # API YouTube
-│   ├── analytics.ts      # Analytics personalizado
 │   └── notifications.ts  # Sistema de notificações
 ├── scripts/              # Scripts SQL
 ├── public/               # Arquivos estáticos
@@ -236,22 +233,6 @@ eletrocast/
 - Validação de entrada com Zod
 - Sanitização de dados
 - Proteção contra XSS e SQL Injection
-
-## 📊 Analytics e Monitoramento
-
-### Eventos Rastreados
-- Visualizações de página
-- Cliques em vídeos
-- Leitura de notícias
-- Interações com formulários
-- Erros e performance
-
-### Métricas Disponíveis
-- Usuários únicos
-- Páginas mais visitadas
-- Tempo de permanência
-- Taxa de conversão
-- Origem do tráfego
 
 ## 🚀 Deploy
 

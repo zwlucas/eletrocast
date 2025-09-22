@@ -8,7 +8,6 @@ import { notFound } from "next/navigation"
 import ShareButtons from "@/components/ShareButtons"
 import Comments from "@/components/Comments"
 import { FadeIn } from "@/components/AnimatedComponents"
-import { trackNewsRead } from "@/lib/analytics"
 
 interface NoticiaPageProps {
   params: {
@@ -36,11 +35,6 @@ export default function NoticiaClientPage({ params }: NoticiaPageProps) {
         }
 
         setNoticia(data)
-
-        // Track analytics after noticia is loaded
-        if (data) {
-          trackNewsRead(data.id, data.titulo)
-        }
       } catch (err) {
         setError(err)
       } finally {
