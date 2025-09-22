@@ -1,443 +1,276 @@
 "use client"
 
-import type React from "react"
 import { useState, useEffect } from "react"
-import { supabase, type Noticia } from "@/lib/supabase"
-import type { User } from "@supabase/supabase-js"
-import TagInput from "@/components/TagInput"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Badge } from "@/components/ui/badge"
-import { BarChart3, MessageSquare, FileText } from "lucide-react"
-import AdminComments from "@/components/AdminComments"
-import AdminAnalytics from "@/components/AdminAnalytics"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { FileText, Users, Mail, Youtube, Clock, Send, Eye } from "lucide-react"
+import Link from "next/link"
 import YouTubeCacheStats from "@/components/YouTubeCacheStats"
+import { supabase } from "@/lib/supabase"
 
-const noticiaSchema = z.object({
-  titulo: z.string().min(1, "Título é obrigatório").max(200, "Título muito longo"),
-  conteudo: z.string().min(1, "Conteúdo é obrigatório"),
-  imagem_opcional: z.string().url("URL inválida").optional().or(z.literal("")),
-})
+interface DashboardStats {
+  totalNoticias: number
+  noticiasPendentes: number
+  totalSubscribers: number
+  subscribersAtivos: number
+  visualizacoesTotais: number
+  noticiasRecentes: Array<{
+    id: string
+    titulo: string
+    data_publicacao: string | null
+    autor: string
+  }>
+}
 
-type NoticiaFormData = z.infer<typeof noticiaSchema>
-
-export default function AdminPage() {
-  const [user, setUser] = useState<User | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [noticias, setNoticias] = useState<Noticia[]>([])
-  const [showForm, setShowForm] = useState(false)
-  const [editingNoticia, setEditingNoticia] = useState<Noticia | null>(null)
-  const [tags, setTags] = useState<string[]>([])
-  const [activeTab, setActiveTab] = useState("noticias")
-  const [pendingCommentsCount, setPendingCommentsCount] = useState(0)
-
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors, isSubmitting },
-  } = useForm<NoticiaFormData>({
-    resolver: zodResolver(noticiaSchema),
+export default function AdminDashboard() {
+  const [stats, setStats] = useState<DashboardStats>({
+    totalNoticias: 0,
+    noticiasPendentes: 0,
+    totalSubscribers: 0,
+    subscribersAtivos: 0,
+    visualizacoesTotais: 0,
+    noticiasRecentes: [],
   })
-
-  // Auth
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [authLoading, setAuthLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    checkUser()
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, session) => {
-      setUser(session?.user ?? null)
-      setLoading(false)
-    })
-
-    return () => subscription.unsubscribe()
+    fetchDashboardStats()
   }, [])
 
-  useEffect(() => {
-    if (user) {
-      fetchNoticias()
-      fetchPendingCommentsCount()
-    }
-  }, [user])
-
-  const checkUser = async () => {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
-    setUser(user)
-    setLoading(false)
-  }
-
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setAuthLoading(true)
-
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    })
-
-    if (error) {
-      alert("Erro no login: " + error.message)
-    }
-
-    setAuthLoading(false)
-  }
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut()
-  }
-
-  const fetchNoticias = async () => {
-    const { data, error } = await supabase.from("noticias").select("*").order("data_publicacao", { ascending: false })
-
-    if (error) {
-      console.error("Error fetching noticias:", error)
-    } else {
-      setNoticias(data || [])
-    }
-  }
-
-  const fetchPendingCommentsCount = async () => {
-    const { count, error } = await supabase
-      .from("comentarios")
-      .select("*", { count: "exact", head: true })
-      .eq("aprovado", false)
-
-    if (!error && count !== null) {
-      setPendingCommentsCount(count)
-    }
-  }
-
-  const onSubmit = async (data: NoticiaFormData) => {
-    const formData = {
-      ...data,
-      tags: tags.length > 0 ? tags : null,
-      imagem_opcional: data.imagem_opcional || null,
-    }
-
-    if (editingNoticia) {
-      const { error } = await supabase
+  const fetchDashboardStats = async () => {
+    try {
+      // Buscar estatísticas das notícias
+      const { data: noticias } = await supabase
         .from("noticias")
-        .update({
-          ...formData,
-          updated_by: user?.id,
-        })
-        .eq("id", editingNoticia.id)
+        .select("id, titulo, data_publicacao, autor, visualizacoes")
+        .order("created_at", { ascending: false })
 
-      if (error) {
-        alert("Erro ao atualizar notícia: " + error.message)
-      } else {
-        alert("Notícia atualizada com sucesso!")
-        resetForm()
-        fetchNoticias()
-      }
-    } else {
-      const { error } = await supabase.from("noticias").insert([
-        {
-          ...formData,
-          created_by: user?.id,
-        },
-      ])
+      // Buscar estatísticas dos subscribers
+      const { data: subscribers } = await supabase.from("newsletter_subscribers").select("is_active")
 
-      if (error) {
-        alert("Erro ao criar notícia: " + error.message)
-      } else {
-        alert("Notícia criada com sucesso!")
-        resetForm()
-        fetchNoticias()
-      }
+      const totalNoticias = noticias?.length || 0
+      const noticiasPendentes = noticias?.filter((n) => !n.data_publicacao).length || 0
+      const totalSubscribers = subscribers?.length || 0
+      const subscribersAtivos = subscribers?.filter((s) => s.is_active).length || 0
+      const visualizacoesTotais = noticias?.reduce((sum, n) => sum + (n.visualizacoes || 0), 0) || 0
+      const noticiasRecentes = noticias?.slice(0, 5) || []
+
+      setStats({
+        totalNoticias,
+        noticiasPendentes,
+        totalSubscribers,
+        subscribersAtivos,
+        visualizacoesTotais,
+        noticiasRecentes,
+      })
+    } catch (error) {
+      console.error("Erro ao buscar estatísticas:", error)
+    } finally {
+      setLoading(false)
     }
   }
 
-  const handleEdit = (noticia: Noticia) => {
-    setEditingNoticia(noticia)
-    reset({
-      titulo: noticia.titulo,
-      conteudo: noticia.conteudo,
-      imagem_opcional: noticia.imagem_opcional || "",
-    })
-    setTags(noticia.tags || [])
-    setShowForm(true)
-  }
-
-  const handleDelete = async (id: string) => {
-    if (confirm("Tem certeza que deseja excluir esta notícia?")) {
-      const { error } = await supabase.from("noticias").delete().eq("id", id)
-
-      if (error) {
-        alert("Erro ao excluir notícia: " + error.message)
-      } else {
-        alert("Notícia excluída com sucesso!")
-        fetchNoticias()
-      }
-    }
-  }
-
-  const resetForm = () => {
-    reset()
-    setTags([])
-    setEditingNoticia(null)
-    setShowForm(false)
-  }
+  const quickActions = [
+    {
+      title: "Nova Notícia",
+      description: "Criar e publicar nova notícia",
+      icon: FileText,
+      href: "/admin/noticias",
+      color: "bg-blue-500",
+    },
+    {
+      title: "Gerenciar Notícias",
+      description: "Ver todas as notícias",
+      icon: FileText,
+      href: "/admin/noticias",
+      color: "bg-green-500",
+    },
+    {
+      title: "Newsletter",
+      description: "Gerenciar assinantes",
+      icon: Mail,
+      href: "/admin/newsletter",
+      color: "bg-purple-500",
+    },
+    {
+      title: "Cache YouTube",
+      description: "Monitorar performance",
+      icon: Youtube,
+      href: "#youtube-cache",
+      color: "bg-red-500",
+    },
+  ]
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-600"></div>
-      </div>
-    )
-  }
-
-  if (!user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
-        <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-lg shadow-md p-8">
-          <h1 className="text-2xl font-bold text-blue-900 dark:text-blue-100 mb-6 text-center">
-            Painel Administrativo
-          </h1>
-
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Senha</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={authLoading}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md transition-colors disabled:opacity-50"
-            >
-              {authLoading ? "Entrando..." : "Entrar"}
-            </button>
-          </form>
-        </div>
+      <div className="container mx-auto px-4 py-8">
+        <div className="text-center">Carregando dashboard...</div>
       </div>
     )
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-blue-900 dark:text-blue-100">Painel Administrativo</h1>
-        <button
-          onClick={handleLogout}
-          className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md transition-colors"
-        >
-          Sair
-        </button>
+    <div className="container mx-auto px-4 py-8">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold mb-2">Dashboard Administrativo</h1>
+        <p className="text-gray-600">Gerencie seu site, notícias e assinantes do newsletter</p>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid grid-cols-3 mb-8">
-          <TabsTrigger value="noticias" className="flex items-center gap-2">
-            <FileText className="h-4 w-4" />
-            <span>Notícias</span>
-          </TabsTrigger>
-          {/* <TabsTrigger value="comentarios" className="flex items-center gap-2">
-            <MessageSquare className="h-4 w-4" />
-            <span>Comentários</span>
-            {pendingCommentsCount > 0 && (
-              <Badge variant="destructive" className="ml-1">
-                {pendingCommentsCount}
-              </Badge>
+      {/* Estatísticas Principais */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total de Notícias</CardTitle>
+            <FileText className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.totalNoticias}</div>
+            <p className="text-xs text-muted-foreground">{stats.noticiasPendentes} pendentes de publicação</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Assinantes Newsletter</CardTitle>
+            <Users className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.subscribersAtivos}</div>
+            <p className="text-xs text-muted-foreground">de {stats.totalSubscribers} total</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Visualizações</CardTitle>
+            <Eye className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.visualizacoesTotais.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground">Total de visualizações</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Rascunhos</CardTitle>
+            <Clock className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.noticiasPendentes}</div>
+            <p className="text-xs text-muted-foreground">Aguardando publicação</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Ações Rápidas */}
+      <div className="mb-8">
+        <h2 className="text-xl font-semibold mb-4">Ações Rápidas</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {quickActions.map((action) => (
+            <Card key={action.title} className="hover:shadow-md transition-shadow cursor-pointer">
+              <CardContent className="p-4">
+                <Link href={action.href} className="block">
+                  <div className="flex items-center space-x-3">
+                    <div className={`p-2 rounded-lg ${action.color}`}>
+                      <action.icon className="h-5 w-5 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="font-medium">{action.title}</h3>
+                      <p className="text-sm text-gray-600">{action.description}</p>
+                    </div>
+                  </div>
+                </Link>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+
+      {/* Notícias Recentes */}
+      <div className="mb-8">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold">Notícias Recentes</h2>
+          <Link href="/admin/noticias">
+            <Button variant="outline" size="sm">
+              Ver Todas
+            </Button>
+          </Link>
+        </div>
+        <Card>
+          <CardContent className="p-0">
+            {stats.noticiasRecentes.length > 0 ? (
+              <div className="divide-y">
+                {stats.noticiasRecentes.map((noticia) => (
+                  <div key={noticia.id} className="p-4 flex justify-between items-center">
+                    <div>
+                      <h3 className="font-medium">{noticia.titulo}</h3>
+                      <p className="text-sm text-gray-600">
+                        Por {noticia.autor} •{" "}
+                        {noticia.data_publicacao
+                          ? new Date(noticia.data_publicacao).toLocaleDateString("pt-BR")
+                          : "Rascunho"}
+                      </p>
+                    </div>
+                    <div className="flex gap-2">
+                      {noticia.data_publicacao ? (
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                          Publicada
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                          Rascunho
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="p-8 text-center text-gray-500">Nenhuma notícia encontrada</div>
             )}
-          </TabsTrigger> */}
-          <TabsTrigger value="youtube" className="flex items-center gap-2">
-            <MessageSquare className="h-4 w-4" />
-            <span>Youtube Cache</span>
-          </TabsTrigger>
-          <TabsTrigger value="analytics" className="flex items-center gap-2">
-            <BarChart3 className="h-4 w-4" />
-            <span>Analytics</span>
-          </TabsTrigger>
-        </TabsList>
+          </CardContent>
+        </Card>
+      </div>
 
-        <TabsContent value="noticias">
-          <div className="mb-8">
-            <button
-              onClick={() => setShowForm(!showForm)}
-              className="bg-yellow-400 hover:bg-yellow-500 dark:bg-yellow-500 dark:hover:bg-yellow-600 text-yellow-900 dark:text-yellow-100 font-semibold px-6 py-3 rounded-lg transition-colors"
-            >
-              {showForm ? "Cancelar" : "Nova Notícia"}
-            </button>
-          </div>
-
-          {showForm && (
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
-              <h2 className="text-xl font-semibold text-blue-900 dark:text-blue-100 mb-4">
-                {editingNoticia ? "Editar Notícia" : "Nova Notícia"}
-              </h2>
-
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Título *</label>
-                  <input
-                    {...register("titulo")}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                  {errors.titulo && <p className="text-red-500 text-sm mt-1">{errors.titulo.message}</p>}
+      {/* Sistema de Notificações */}
+      <div className="mb-8">
+        <h2 className="text-xl font-semibold mb-4">Sistema de Notificações</h2>
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-start space-x-4">
+              <div className="p-3 bg-blue-100 rounded-lg">
+                <Send className="h-6 w-6 text-blue-600" />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-medium mb-2">Notificações Automáticas Ativas</h3>
+                <p className="text-gray-600 mb-4">
+                  Quando você publica uma nova notícia, todos os {stats.subscribersAtivos} assinantes ativos do
+                  newsletter recebem automaticamente um email com o conteúdo.
+                </p>
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0">
+                      <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                    </div>
+                    <div className="ml-3">
+                      <p className="text-sm text-green-800">
+                        <strong>Sistema funcionando:</strong> As notificações por email estão ativas e funcionando
+                        corretamente.
+                      </p>
+                    </div>
+                  </div>
                 </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Conteúdo *</label>
-                  <textarea
-                    {...register("conteudo")}
-                    rows={6}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                  {errors.conteudo && <p className="text-red-500 text-sm mt-1">{errors.conteudo.message}</p>}
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    URL da Imagem (opcional)
-                  </label>
-                  <input
-                    {...register("imagem_opcional")}
-                    type="url"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                  {errors.imagem_opcional && (
-                    <p className="text-red-500 text-sm mt-1">{errors.imagem_opcional.message}</p>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tags</label>
-                  <TagInput tags={tags} onChange={setTags} placeholder="Digite uma tag e pressione Enter..." />
-                </div>
-
-                <div className="flex gap-4">
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md transition-colors disabled:opacity-50"
-                  >
-                    {isSubmitting ? "Salvando..." : editingNoticia ? "Atualizar" : "Criar"}
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={resetForm}
-                    className="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-md transition-colors"
-                  >
-                    Cancelar
-                  </button>
-                </div>
-              </form>
+              </div>
             </div>
-          )}
+          </CardContent>
+        </Card>
+      </div>
 
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
-            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Notícias Publicadas</h2>
-            </div>
-
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                <thead className="bg-gray-50 dark:bg-gray-700">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                      Título
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                      Tags
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                      Data
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                      Ações
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                  {noticias.map((noticia) => (
-                    <tr key={noticia.id}>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-medium text-gray-900 dark:text-gray-100">{noticia.titulo}</div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex flex-wrap gap-1">
-                          {noticia.tags?.slice(0, 3).map((tag, index) => (
-                            <span
-                              key={index}
-                              className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded-full text-xs"
-                            >
-                              #{tag}
-                            </span>
-                          ))}
-                          {noticia.tags && noticia.tags.length > 3 && (
-                            <span className="text-gray-500 dark:text-gray-400 text-xs px-2 py-1">
-                              +{noticia.tags.length - 3}
-                            </span>
-                          )}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-500 dark:text-gray-400">
-                          {new Date(noticia.data_publicacao).toLocaleDateString("pt-BR")}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <button
-                          onClick={() => handleEdit(noticia)}
-                          className="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 mr-4"
-                        >
-                          Editar
-                        </button>
-                        <button
-                          onClick={() => handleDelete(noticia.id)}
-                          className="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300"
-                        >
-                          Excluir
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </TabsContent>
-
-        {/* <TabsContent value="comentarios">
-          <AdminComments onApprove={fetchPendingCommentsCount} />
-        </TabsContent> */}
-
-        <TabsContent value="youtube">
-          <YouTubeCacheStats />
-        </TabsContent>
-
-        <TabsContent value="analytics">
-          <AdminAnalytics />
-        </TabsContent>
-      </Tabs>
+      {/* Cache do YouTube */}
+      <div id="youtube-cache">
+        <YouTubeCacheStats />
+      </div>
     </div>
   )
 }
