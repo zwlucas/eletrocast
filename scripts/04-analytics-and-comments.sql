@@ -1,3 +1,16 @@
+-- Tabela para analytics (opcional)
+CREATE TABLE IF NOT EXISTS analytics_events (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  event TEXT NOT NULL,
+  properties JSONB,
+  timestamp TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  url TEXT,
+  referrer TEXT,
+  user_agent TEXT,
+  ip TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
 -- Tabela para comentários
 CREATE TABLE IF NOT EXISTS comentarios (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,

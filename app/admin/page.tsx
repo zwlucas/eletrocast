@@ -9,11 +9,13 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { MessageSquare, FileText } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import { BarChart3, MessageSquare, FileText } from "lucide-react"
+import AdminComments from "@/components/AdminComments"
+import AdminAnalytics from "@/components/AdminAnalytics"
 import YouTubeCacheStats from "@/components/YouTubeCacheStats"
 
 const noticiaSchema = z.object({
-  id: z.string(),
   titulo: z.string().min(1, "Título é obrigatório").max(200, "Título muito longo"),
   conteudo: z.string().min(1, "Conteúdo é obrigatório"),
   imagem_opcional: z.string().url("URL inválida").optional().or(z.literal("")),
@@ -145,24 +147,6 @@ export default function AdminPage() {
         },
       ])
 
-      try {
-        const response = await fetch(`/api/newsletter/notify`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            ...data,
-          }),
-        })
-
-        const result = await response.json()
-
-        if (!response.ok) {
-          throw new Error(result.error || "Erro ao publicar notícia")
-        }
-      } catch (error) {
-        console.error("Erro:", error)
-      }
-
       if (error) {
         alert("Erro ao criar notícia: " + error.message)
       } else {
@@ -286,6 +270,10 @@ export default function AdminPage() {
           <TabsTrigger value="youtube" className="flex items-center gap-2">
             <MessageSquare className="h-4 w-4" />
             <span>Youtube Cache</span>
+          </TabsTrigger>
+          <TabsTrigger value="analytics" className="flex items-center gap-2">
+            <BarChart3 className="h-4 w-4" />
+            <span>Analytics</span>
           </TabsTrigger>
         </TabsList>
 
@@ -444,6 +432,10 @@ export default function AdminPage() {
 
         <TabsContent value="youtube">
           <YouTubeCacheStats />
+        </TabsContent>
+
+        <TabsContent value="analytics">
+          <AdminAnalytics />
         </TabsContent>
       </Tabs>
     </div>
