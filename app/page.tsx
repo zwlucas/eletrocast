@@ -5,7 +5,7 @@ import { VideoSkeleton } from "@/components/SkeletonLoader"
 import { FadeIn, SlideIn } from "@/components/AnimatedComponents"
 import { Suspense } from "react"
 
-export const revalidate = 300 // Revalidar a cada 5 minutos
+export const revalidate = 300
 
 export default async function Home() {
   const [liveStream, latestVideo, premierVideo] = await Promise.all([

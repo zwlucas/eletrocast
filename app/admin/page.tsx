@@ -12,7 +12,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import { BarChart3, MessageSquare, FileText } from "lucide-react"
 import AdminComments from "@/components/AdminComments"
-import AdminAnalytics from "@/components/AdminAnalytics"
 import YouTubeCacheStats from "@/components/YouTubeCacheStats"
 
 const noticiaSchema = z.object({
@@ -271,10 +270,6 @@ export default function AdminPage() {
             <MessageSquare className="h-4 w-4" />
             <span>Youtube Cache</span>
           </TabsTrigger>
-          <TabsTrigger value="analytics" className="flex items-center gap-2">
-            <BarChart3 className="h-4 w-4" />
-            <span>Analytics</span>
-          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="noticias">
@@ -432,10 +427,6 @@ export default function AdminPage() {
 
         <TabsContent value="youtube">
           <YouTubeCacheStats />
-        </TabsContent>
-
-        <TabsContent value="analytics">
-          <AdminAnalytics />
         </TabsContent>
       </Tabs>
     </div>
