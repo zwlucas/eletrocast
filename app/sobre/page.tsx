@@ -14,8 +14,8 @@ export default function SobrePage() {
         <div className="prose prose-lg max-w-none text-gray-700 dark:text-gray-300">
           <p className="mb-4">
             A ideia surgiu de duas amigas, por impulso, em 2023. Foi um dos maiores projetos da Eletrô daquele ano.
-            Mas nem sempre foi como está sendo visto. No começo a "gambiarra rolava"
-            solta no estúdio e mesmo assim fizemos algo que muitos gostaram. Isso incentivou a Eletrô a adquirir os
+            Mas nem sempre foi como está sendo visto. No começo a "gambiarra rolava solta"
+            no estúdio e mesmo assim fizemos algo que muitos gostaram. Isso incentivou a Eletrô a adquirir os
             equipamentos necessarios.
           </p>
 
